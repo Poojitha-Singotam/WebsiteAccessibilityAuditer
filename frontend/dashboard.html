@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Web Accessibility Auditor</title>
+    <meta name="description" content="Overview dashboard showing aggregate accessibility statistics and recent audit reports.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+                    <li><a href="auditor.html" class="nav-link">New Audit</a></li>
+                    <li><a href="history.html" class="nav-link">Audit History</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li id="nav-login-link"><a href="login.html" class="btn btn-outline btn-sm">Sign In</a></li>
+                    <li id="nav-user-profile" style="display: none;">
+                        <span class="user-profile-badge">
+                            <span class="user-avatar">&#128100;</span>
+                            <span id="user-name-display">User</span>
+                        </span>
+                    </li>
+                    <li id="nav-logout-btn" style="display: none;">
+                        <a href="#logout" class="btn btn-outline btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <!-- Hero Section -->
+        <section class="dashboard-hero" aria-labelledby="dash-hero-title">
+            <div class="hero-content">
+                <h1 id="dash-hero-title">Web Accessibility Auditor</h1>
+                <p class="hero-subtitle">Analyze HTML and identify accessibility issues automatically.</p>
+                <a href="auditor.html" class="btn btn-primary btn-lg">Start New Audit</a>
+            </div>
+            <div style="text-align: right;">
+                <span class="badge badge-info" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Automated WCAG 2.1 Engine</span>
+            </div>
+        </section>
+
+        <!-- Mandatory Testing Limitation Notice -->
+        <aside class="limitation-notice" role="note" aria-label="Testing limitations notice">
+            <span class="limitation-icon" aria-hidden="true">&#9888;</span>
+            <div>
+                <strong>Automated Audit Notice:</strong> Automated testing identifies common detectable issues but cannot determine complete accessibility. Manual keyboard, screen reader, and contrast inspection remain essential for full compliance.
+            </div>
+        </aside>
+
+        <!-- Statistics Grid -->
+        <section aria-labelledby="stats-heading">
+            <h2 id="stats-heading" class="visually-hidden" style="display: none;">Audit Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card stat-total">
+                    <span class="stat-label">Total Audits</span>
+                    <span id="stat-total-audits" class="stat-value">0</span>
+                </div>
+                <div class="stat-card stat-score">
+                    <span class="stat-label">Average Score</span>
+                    <span id="stat-avg-score" class="stat-value">100</span>
+                </div>
+                <div class="stat-card stat-critical">
+                    <span class="stat-label">Critical Issues</span>
+                    <span id="stat-critical-issues" class="stat-value">0</span>
+                </div>
+                <div class="stat-card stat-errors">
+                    <span class="stat-label">Errors Found</span>
+                    <span id="stat-errors-found" class="stat-value">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Audits Section -->
+        <section aria-labelledby="recent-audits-heading" style="margin-bottom: 3rem;">
+            <div class="section-header">
+                <h2 id="recent-audits-heading">Recent Audits</h2>
+                <a href="history.html" class="btn btn-outline btn-sm">View All History &rarr;</a>
+            </div>
+
+            <div id="dash-loading" style="text-align: center; padding: 2rem;">
+                <div class="spinner" style="margin: 0 auto 1rem auto;"></div>
+                <p>Loading audit records from MySQL...</p>
+            </div>
+
+            <div id="dash-empty" class="card empty-state" style="display: none;">
+                <div class="empty-state-icon">&#128202;</div>
+                <h3>No Audits Yet</h3>
+                <p>You haven't run any accessibility audits yet. Start your first audit to view scores and issues here.</p>
+                <a href="auditor.html" class="btn btn-primary" style="margin-top: 1rem;">Run Your First Audit</a>
+            </div>
+
+            <div id="dash-table-wrapper" class="table-responsive" style="display: none;">
+                <table class="data-table" aria-label="Recent Accessibility Audits">
+                    <thead>
+                        <tr>
+                            <th scope="col">Page Name</th>
+                            <th scope="col">Score</th>
+                            <th scope="col">Issues Summary</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-audits-body">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Developer accessibility toolkit.</p>
+            <p><a href="auditor.html">Run Audit</a> &bull; <a href="history.html">Audit History</a></p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            A11yAuth.requireAuth();
+
+            const statTotal = document.getElementById('stat-total-audits');
+            const statAvg = document.getElementById('stat-avg-score');
+            const statCrit = document.getElementById('stat-critical-issues');
+            const statErr = document.getElementById('stat-errors-found');
+
+            const loadingEl = document.getElementById('dash-loading');
+            const emptyEl = document.getElementById('dash-empty');
+            const tableWrapper = document.getElementById('dash-table-wrapper');
+            const tableBody = document.getElementById('recent-audits-body');
+
+            try {
+                // Fetch me stats & recent audits
+                const profileData = await A11yAPI.getMe();
+                if (profileData && profileData.stats) {
+                    statTotal.textContent = profileData.stats.total_audits || 0;
+                    statAvg.textContent = `${profileData.stats.avg_score || 100}/100`;
+                    statCrit.textContent = profileData.stats.total_critical || 0;
+                    statErr.textContent = profileData.stats.total_errors || 0;
+                }
+
+                const auditsResp = await A11yAPI.getAudits();
+                const audits = auditsResp.audits || [];
+
+                loadingEl.style.display = 'none';
+
+                if (audits.length === 0) {
+                    emptyEl.style.display = 'block';
+                    return;
+                }
+
+                tableWrapper.style.display = 'block';
+                // Show up to 5 most recent
+                const recent = audits.slice(0, 5);
+                tableBody.innerHTML = recent.map(audit => {
+                    const score = audit.score || 0;
+                    let scoreClass = 'poor';
+                    if (score >= 90) scoreClass = 'excellent';
+                    else if (score >= 75) scoreClass = 'good';
+                    else if (score >= 50) scoreClass = 'warning';
+
+                    return `
+                        <tr>
+                            <td><strong>${A11yUtils.escapeHTML(audit.page_name)}</strong></td>
+                            <td><span class="score-pill ${scoreClass}">${score}</span></td>
+                            <td>
+                                <div class="issue-counts-compact">
+                                    <span class="badge badge-critical" title="Critical">${audit.critical_count || 0}</span>
+                                    <span class="badge badge-error" title="Errors">${audit.error_count || 0}</span>
+                                    <span class="badge badge-warning" title="Warnings">${audit.warning_count || 0}</span>
+                                    <span class="badge badge-pass" title="Passed">${audit.pass_count || 0}</span>
+                                </div>
+                            </td>
+                            <td>${A11yUtils.formatDate(audit.created_at)}</td>
+                            <td>
+                                <a href="report.html?id=${audit.id}" class="btn btn-outline btn-sm">View Report</a>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Dashboard load error:', err);
+                loadingEl.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

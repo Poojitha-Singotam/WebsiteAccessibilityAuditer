@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Audit Report - Web Accessibility Auditor</title>
+    <meta name="description" content="Visual audit report detailing detected web accessibility violations, severity grades, recommendations, and WCAG references.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/report.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="auditor.html" class="nav-link">New Audit</a></li>
+                    <li><a href="history.html" class="nav-link">Audit History</a></li>
+                    <li id="nav-login-link"><a href="login.html" class="btn btn-outline btn-sm">Sign In</a></li>
+                    <li id="nav-user-profile" style="display: none;">
+                        <span class="user-profile-badge">
+                            <span class="user-avatar">&#128100;</span>
+                            <span id="user-name-display">User</span>
+                        </span>
+                    </li>
+                    <li id="nav-logout-btn" style="display: none;">
+                        <a href="#logout" class="btn btn-outline btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <!-- Loading State for saved reports -->
+        <div id="report-loading" style="display: none; align-items: center; justify-content: center; padding: 4rem;">
+            <div class="spinner"></div>
+            <span style="margin-left: 1rem; color: var(--text-secondary);">Loading audit report...</span>
+        </div>
+
+        <!-- Report Header -->
+        <section class="report-header" aria-labelledby="report-page-title">
+            <div class="report-title-area">
+                <h1 id="report-page-title">Accessibility Evaluation Report</h1>
+                <div id="report-timestamp" class="report-meta">Automated DOM analysis</div>
+            </div>
+            <div class="report-actions">
+                <a href="auditor.html" class="btn btn-outline btn-sm">&larr; New Audit</a>
+                <button type="button" id="btn-print-report" class="btn btn-secondary btn-sm" aria-label="Print or export report as PDF">
+                    &#128438; Print / Export
+                </button>
+                <button type="button" id="btn-save-audit" class="btn btn-primary btn-sm" aria-label="Save audit results to MySQL database">
+                    &#128190; Save Audit to MySQL
+                </button>
+            </div>
+        </section>
+
+        <!-- Mandatory Limitations Notice -->
+        <aside class="limitation-notice" role="note" aria-label="Automated testing limitations notice">
+            <span class="limitation-icon" aria-hidden="true">&#9888;</span>
+            <div>
+                <strong>Audit Score Disclaimer:</strong> This metric represents an automated heuristic <em>Audit Score</em> based on detectable WCAG 2.1 rules. Automated testing alone does not replace complete manual accessibility evaluation, keyboard operability testing, or assistive technology screen reader validation.
+            </div>
+        </aside>
+
+        <!-- Score Overview & Summary Counters -->
+        <section class="score-overview-card" aria-labelledby="score-section-heading">
+            <h2 id="score-section-heading" class="visually-hidden" style="display: none;">Score and Issue Summary</h2>
+            <div class="score-display">
+                <div class="score-circle" id="score-circle" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Audit Score">
+                    <span id="score-number" class="score-number">--</span>
+                    <span class="score-scale">/ 100</span>
+                </div>
+                <div id="score-grade" class="score-grade-badge">Evaluating</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">Audit Score</span>
+            </div>
+
+            <div>
+                <h3 style="font-size: 1rem; margin-bottom: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">
+                    Issue Severity Summary (Click to filter)
+                </h3>
+                <div class="summary-counters">
+                    <div class="counter-tile tile-critical" data-severity="CRITICAL" tabindex="0" role="button" aria-label="Filter by Critical Issues">
+                        <div class="counter-label" style="color: #fca5a5;">Critical</div>
+                        <div id="count-critical" class="counter-number" style="color: var(--severity-critical);">0</div>
+                    </div>
+                    <div class="counter-tile tile-error" data-severity="ERROR" tabindex="0" role="button" aria-label="Filter by Errors">
+                        <div class="counter-label" style="color: #fdba74;">Errors</div>
+                        <div id="count-error" class="counter-number" style="color: var(--severity-error);">0</div>
+                    </div>
+                    <div class="counter-tile tile-warning" data-severity="WARNING" tabindex="0" role="button" aria-label="Filter by Warnings">
+                        <div class="counter-label" style="color: #fde047;">Warnings</div>
+                        <div id="count-warning" class="counter-number" style="color: var(--severity-warning);">0</div>
+                    </div>
+                    <div class="counter-tile tile-info" data-severity="INFO" tabindex="0" role="button" aria-label="Filter by Information">
+                        <div class="counter-label" style="color: #67e8f9;">Info</div>
+                        <div id="count-info" class="counter-number" style="color: var(--severity-info);">0</div>
+                    </div>
+                    <div class="counter-tile tile-pass" data-severity="PASS" tabindex="0" role="button" aria-label="Filter by Passed Checks">
+                        <div class="counter-label" style="color: #6ee7b7;">Pass</div>
+                        <div id="count-pass" class="counter-number" style="color: var(--severity-pass);">0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Filters -->
+        <section class="category-filters-wrapper" aria-label="Filter issues by category">
+            <div class="category-filter-list" role="tablist">
+                <button type="button" class="category-chip active" data-category="ALL" role="tab" aria-selected="true">All Categories</button>
+                <button type="button" class="category-chip" data-category="Images" role="tab" aria-selected="false">Images</button>
+                <button type="button" class="category-chip" data-category="Forms" role="tab" aria-selected="false">Forms</button>
+                <button type="button" class="category-chip" data-category="Headings" role="tab" aria-selected="false">Headings</button>
+                <button type="button" class="category-chip" data-category="Links" role="tab" aria-selected="false">Links</button>
+                <button type="button" class="category-chip" data-category="Buttons" role="tab" aria-selected="false">Buttons</button>
+                <button type="button" class="category-chip" data-category="Structure" role="tab" aria-selected="false">Structure</button>
+                <button type="button" class="category-chip" data-category="ARIA" role="tab" aria-selected="false">ARIA</button>
+                <button type="button" class="category-chip" data-category="Tables" role="tab" aria-selected="false">Tables</button>
+                <button type="button" class="category-chip" data-category="Media" role="tab" aria-selected="false">Media</button>
+                <button type="button" class="category-chip" data-category="Document" role="tab" aria-selected="false">Document</button>
+            </div>
+        </section>
+
+        <!-- Search & Sort Controls Bar -->
+        <section class="controls-bar" aria-label="Filter and Sort Controls">
+            <div class="search-input-wrapper">
+                <label for="issue-search" class="visually-hidden" style="display: none;">Search detected issues</label>
+                <input type="search" id="issue-search" class="form-control" placeholder="Search issues by rule, keyword, tag, or WCAG..." aria-label="Search detected issues">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span id="filtered-count-display" style="font-size: 0.8125rem; color: var(--text-secondary);">
+                    Showing 0 items
+                </span>
+
+                <div class="sort-group">
+                    <label for="issue-sort">Sort By:</label>
+                    <select id="issue-sort" class="sort-select" aria-label="Sort issues by">
+                        <option value="severity">Severity (Critical first)</option>
+                        <option value="category">Category (A-Z)</option>
+                        <option value="dom">DOM Order</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Issues Feed -->
+        <section id="issues-feed" class="issues-feed" aria-label="Detected accessibility issues and passed checks" aria-live="polite">
+            <!-- Rendered by JavaScript -->
+        </section>
+    </main>
+
+    <!-- Modal for View Element Inspection -->
+    <div id="inspect-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-issue-title" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-issue-title" style="font-size: 1.15rem; margin-bottom: 0.25rem;">Inspect Element</h3>
+                    <div id="modal-rule-info" style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);"></div>
+                </div>
+                <button type="button" id="modal-close-icon" class="btn btn-outline btn-sm" aria-label="Close modal dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="issue-section-label">Source Code Snippet</div>
+                <div id="modal-code-display" class="code-block" style="max-height: 220px; overflow-y: auto;"></div>
+
+                <div class="issue-section-label" style="margin-top: 1.25rem;">Recommended Accessible Fix</div>
+                <div id="modal-recommended-fix" class="code-block" style="color: #6ee7b7;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-close-modal" class="btn btn-secondary btn-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Developer accessibility toolkit.</p>
+            <p><a href="auditor.html">Run Another Audit</a> &bull; <a href="dashboard.html">Dashboard</a> &bull; <a href="history.html">Audit History</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auditor.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/report.js"></script>
+</body>
+</html>

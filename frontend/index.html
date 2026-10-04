@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Accessibility Auditor - Real-Time Automated WCAG HTML Analysis</title>
+    <meta name="description" content="Production-grade developer tool for auditing HTML markup against WCAG accessibility standards using real JavaScript DOM parsing.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Application Navigation">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="auditor.html" class="nav-link">New Audit</a></li>
+                    <li><a href="history.html" class="nav-link">Audit History</a></li>
+                    <li id="nav-login-link"><a href="login.html" class="btn btn-outline btn-sm">Sign In</a></li>
+                    <li id="nav-user-profile" style="display: none;">
+                        <span class="user-profile-badge">
+                            <span class="user-avatar">&#128100;</span>
+                            <span id="user-name-display">User</span>
+                        </span>
+                    </li>
+                    <li id="nav-logout-btn" style="display: none;">
+                        <a href="#logout" class="btn btn-outline btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <section class="dashboard-hero" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <h1 id="hero-title">Automated Web Accessibility Evaluation</h1>
+                <p class="hero-subtitle">
+                    Parse HTML markup, inspect DOM trees, and detect accessibility violations across images, forms, headings, ARIA, tables, and media using standard WCAG 2.1 guidelines.
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="auditor.html" class="btn btn-primary btn-lg">Start New Audit</a>
+                    <a href="dashboard.html" class="btn btn-secondary btn-lg">View Dashboard</a>
+                </div>
+            </div>
+            <div style="text-align: right; display: flex; flex-direction: column; gap: 0.5rem;">
+                <div class="badge badge-pass" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">10 Rules Categories</div>
+                <div class="badge badge-info" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Real DOM API Engine</div>
+                <div class="badge badge-warning" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">MySQL Persistence</div>
+            </div>
+        </section>
+
+        <!-- Mandatory Limitations Notice (Section 30) -->
+        <aside class="limitation-notice" role="note" aria-label="Important Accessibility Testing Limitation Notice">
+            <span class="limitation-icon" aria-hidden="true">&#9888;</span>
+            <div>
+                <strong>Important Notice:</strong> Automated accessibility testing identifies common detectable issues but cannot determine complete accessibility. Manual testing, keyboard testing, screen reader testing, visual inspection, and user testing may still be required. This tool generates an Audit Score and does not constitute official WCAG compliance certification.
+            </div>
+        </aside>
+
+        <section aria-labelledby="features-title" style="margin: 3rem 0;">
+            <h2 id="features-title" style="margin-bottom: 1.5rem;">Comprehensive Accessibility Rule Engine</h2>
+            <div class="stats-grid">
+                <div class="card">
+                    <h3 style="color: #60a5fa; margin-bottom: 0.5rem;">Images & Media</h3>
+                    <p>Detects missing alt attributes, unlabelled image buttons, decorative image misuse, and uncaptioned video tracks.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #a78bfa; margin-bottom: 0.5rem;">Forms & Inputs</h3>
+                    <p>Validates label associations (for/id, wrapping), empty labels, accessible names on buttons, and autocomplete opportunities.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #34d399; margin-bottom: 0.5rem;">Headings & Landmarks</h3>
+                    <p>Enforces single H1 presence, identifies heading level skips (e.g. H1 to H3), empty headers, and validates main landmarks.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #fbbf24; margin-bottom: 0.5rem;">ARIA & Interactive</h3>
+                    <p>Catches critical focus traps like aria-hidden="true" on focusable elements, empty aria-labels, and custom button tabindex.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" aria-labelledby="how-it-works-title" style="margin-bottom: 3rem;">
+            <h2 id="how-it-works-title" style="margin-bottom: 1rem;">How It Works</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <h4 style="margin-bottom: 0.4rem; color: #93c5fd;">1. Submit Markup</h4>
+                    <p>Paste raw HTML into the code editor or upload an HTML file using the safe FileReader API without executing script tags.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.4rem; color: #93c5fd;">2. DOM Analysis</h4>
+                    <p>The client-side DOMParser constructs a live DOM tree and passes it through 10 modular JavaScript rule analyzers.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.4rem; color: #93c5fd;">3. Score & Report</h4>
+                    <p>Deductions are calculated based on severity (Critical: 15, Error: 8, Warning: 3, Info: 1) producing an actionable visual report.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.4rem; color: #93c5fd;">4. Save History</h4>
+                    <p>Save audit snapshots and detailed issues into MySQL via Flask REST APIs to track accessibility improvements over time.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Built with Vanilla HTML5, CSS3, JavaScript, Python Flask &amp; MySQL.</p>
+            <p><a href="auditor.html">Run Audit</a> &bull; <a href="dashboard.html">Dashboard</a> &bull; <a href="history.html">Audit History</a></p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

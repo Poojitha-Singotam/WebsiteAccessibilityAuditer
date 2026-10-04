@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Audit - Web Accessibility Auditor</title>
+    <meta name="description" content="Submit HTML markup or upload an HTML file to run real-time automated accessibility analysis.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auditor.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="auditor.html" class="nav-link active">New Audit</a></li>
+                    <li><a href="history.html" class="nav-link">Audit History</a></li>
+                    <li id="nav-login-link"><a href="login.html" class="btn btn-outline btn-sm">Sign In</a></li>
+                    <li id="nav-user-profile" style="display: none;">
+                        <span class="user-profile-badge">
+                            <span class="user-avatar">&#128100;</span>
+                            <span id="user-name-display">User</span>
+                        </span>
+                    </li>
+                    <li id="nav-logout-btn" style="display: none;">
+                        <a href="#logout" class="btn btn-outline btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container auditor-wrapper" role="main">
+        <div style="margin-bottom: 1.5rem;">
+            <h1>HTML Accessibility Analyzer</h1>
+            <p>Paste raw HTML markup or upload an HTML document to execute automated WCAG 2.1 rule checks directly in the DOM.</p>
+        </div>
+
+        <!-- Mandatory Limitations Notice -->
+        <aside class="limitation-notice" role="note" aria-label="Testing limitations notice">
+            <span class="limitation-icon" aria-hidden="true">&#9888;</span>
+            <div>
+                <strong>Notice:</strong> Automated testing identifies common detectable issues but cannot determine complete accessibility. Manual testing, keyboard testing, screen reader testing, visual inspection, and user testing may still be required.
+            </div>
+        </aside>
+
+        <!-- Page Name Input -->
+        <div class="form-group" style="max-width: 600px;">
+            <label for="audit-page-name" class="form-label">Audit Label / Page Name</label>
+            <input type="text" id="audit-page-name" class="form-control" placeholder="e.g., Marketing Homepage, Checkout Modal, Login Form" value="Storefront Landing Page">
+        </div>
+
+        <!-- Sample Pages Selector -->
+        <section class="samples-card" aria-labelledby="sample-loader-title">
+            <div>
+                <h3 id="sample-loader-title" style="font-size: 1rem; margin-bottom: 0.25rem;">Load Benchmark Samples</h3>
+                <p style="font-size: 0.8125rem; margin-bottom: 0; color: var(--text-secondary);">
+                    Explore real detectable differences with pre-configured accessible, poor, or mixed templates.
+                </p>
+            </div>
+            <div class="sample-buttons">
+                <button type="button" id="btn-sample-poor" class="sample-btn sample-poor" aria-label="Load Poor Accessibility Sample">
+                    &#9888; Poor Accessibility
+                </button>
+                <button type="button" id="btn-sample-mixed" class="sample-btn sample-mixed" aria-label="Load Mixed Accessibility Sample">
+                    &#8854; Mixed Accessibility
+                </button>
+                <button type="button" id="btn-sample-good" class="sample-btn sample-good" aria-label="Load Good Accessibility Sample">
+                    &#10003; Good Accessibility
+                </button>
+            </div>
+        </section>
+
+        <!-- Input Mode Tabs (Paste vs Upload) -->
+        <div class="input-mode-tabs" role="tablist" aria-label="HTML Input Options">
+            <button type="button" role="tab" id="tab-paste" class="tab-btn active" aria-selected="true" aria-controls="panel-paste">
+                Paste HTML
+            </button>
+            <button type="button" role="tab" id="tab-upload" class="tab-btn" aria-selected="false" aria-controls="panel-upload">
+                Upload HTML File
+            </button>
+        </div>
+
+        <!-- Panel A: Paste Markup -->
+        <div id="panel-paste" role="tabpanel" aria-labelledby="tab-paste">
+            <div class="editor-container">
+                <div class="editor-toolbar">
+                    <span class="editor-meta">HTML5 Markup Editor &bull; Safe Client Parsing</span>
+                    <span id="char-counter" class="editor-meta">0 characters</span>
+                </div>
+                <label for="html-input-editor" class="visually-hidden" style="display: none;">HTML Source Code</label>
+                <textarea id="html-input-editor" class="editor-textarea" placeholder="<!DOCTYPE html>&#10;<html>&#10;<head>&#10;    <title>Sample Page</title>&#10;</head>&#10;<body>&#10;    <img src=&quot;logo.png&quot;>&#10;    <button></button>&#10;</body>&#10;</html>" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Panel B: Upload File -->
+        <div id="panel-upload" role="tabpanel" aria-labelledby="tab-upload" style="display: none;">
+            <div id="file-dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload HTML file dropzone. Click to browse or drag and drop an HTML file.">
+                <div class="dropzone-icon">&#128194;</div>
+                <div class="dropzone-text">Choose an HTML file or drag &amp; drop it here</div>
+                <div class="dropzone-hint">Supports .html and .htm files. Uploaded scripts are parsed safely without execution.</div>
+                <input type="file" id="html-file-input" accept=".html,.htm" style="display: none;" aria-label="Select HTML file">
+            </div>
+            <div id="upload-status" class="alert alert-info" style="display: none;">
+                <span id="upload-file-name"></span>
+            </div>
+        </div>
+
+        <!-- Analysis Progress -->
+        <div id="audit-progress-indicator" class="audit-progress" aria-live="polite">
+            <div class="spinner"></div>
+            <div>
+                <strong>Running Accessibility Rule Engine...</strong>
+                <p style="margin: 0; font-size: 0.8125rem; color: var(--text-secondary);">Inspecting DOM nodes across 10 WCAG categories.</p>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-buttons">
+                <button type="button" id="btn-analyze" class="btn btn-primary btn-lg">
+                    Analyze HTML
+                </button>
+                <button type="button" id="btn-clear" class="btn btn-outline btn-lg">
+                    Clear
+                </button>
+            </div>
+            <div style="font-size: 0.8125rem; color: var(--text-secondary);">
+                Analysis runs locally in browser via DOMParser. No markup is transmitted without saving.
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Built with Vanilla JS &amp; DOM APIs.</p>
+            <p><a href="dashboard.html">Dashboard</a> &bull; <a href="history.html">Audit History</a></p>
+        </div>
+    </footer>
+
+    <!-- Utility & Rule Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/rules/images.js"></script>
+    <script src="js/rules/forms.js"></script>
+    <script src="js/rules/headings.js"></script>
+    <script src="js/rules/links.js"></script>
+    <script src="js/rules/buttons.js"></script>
+    <script src="js/rules/document.js"></script>
+    <script src="js/rules/structure.js"></script>
+    <script src="js/rules/tables.js"></script>
+    <script src="js/rules/media.js"></script>
+    <script src="js/rules/aria.js"></script>
+    <script src="js/auditor.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editor = document.getElementById('html-input-editor');
+            const pageNameInput = document.getElementById('audit-page-name');
+            const charCounter = document.getElementById('char-counter');
+            const tabPaste = document.getElementById('tab-paste');
+            const tabUpload = document.getElementById('tab-upload');
+            const panelPaste = document.getElementById('panel-paste');
+            const panelUpload = document.getElementById('panel-upload');
+            const dropzone = document.getElementById('file-dropzone');
+            const fileInput = document.getElementById('html-file-input');
+            const uploadStatus = document.getElementById('upload-status');
+            const uploadFileName = document.getElementById('upload-file-name');
+            const btnAnalyze = document.getElementById('btn-analyze');
+            const btnClear = document.getElementById('btn-clear');
+            const progressIndicator = document.getElementById('audit-progress-indicator');
+
+            // Character Counter
+            editor.addEventListener('input', () => {
+                charCounter.textContent = `${editor.value.length.toLocaleString()} characters`;
+            });
+
+            // Tabs Switching
+            tabPaste.addEventListener('click', () => {
+                tabPaste.classList.add('active');
+                tabPaste.setAttribute('aria-selected', 'true');
+                tabUpload.classList.remove('active');
+                tabUpload.setAttribute('aria-selected', 'false');
+                panelPaste.style.display = 'block';
+                panelUpload.style.display = 'none';
+            });
+
+            tabUpload.addEventListener('click', () => {
+                tabUpload.classList.add('active');
+                tabUpload.setAttribute('aria-selected', 'true');
+                tabPaste.classList.remove('active');
+                tabPaste.setAttribute('aria-selected', 'false');
+                panelUpload.style.display = 'block';
+                panelPaste.style.display = 'none';
+            });
+
+            // File Upload Handlers (FileReader API)
+            dropzone.addEventListener('click', () => fileInput.click());
+            dropzone.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    fileInput.click();
+                }
+            });
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    processFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files && fileInput.files.length > 0) {
+                    processFile(fileInput.files[0]);
+                }
+            });
+
+            function processFile(file) {
+                if (!file.name.toLowerCase().endsWith('.html') && !file.name.toLowerCase().endsWith('.htm')) {
+                    alert('Please select an HTML file (.html or .htm).');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const content = event.target.result;
+                    editor.value = content;
+                    charCounter.textContent = `${content.length.toLocaleString()} characters`;
+                    pageNameInput.value = file.name.replace(/\.[^/.]+$/, "");
+                    
+                    uploadStatus.style.display = 'block';
+                    uploadFileName.textContent = `Uploaded "${file.name}" (${(file.size / 1024).toFixed(1)} KB). Switch to Paste Markup tab to edit or click Analyze HTML below.`;
+                };
+                reader.onerror = () => {
+                    alert('Failed to read the selected file.');
+                };
+                reader.readAsText(file);
+            }
+
+            // Benchmark Sample Loaders
+            async function loadSampleCode(type, label) {
+                try {
+                    btnAnalyze.disabled = true;
+                    const sample = await A11yAPI.loadSample(type);
+                    editor.value = sample;
+                    charCounter.textContent = `${sample.length.toLocaleString()} characters`;
+                    pageNameInput.value = label;
+                    // Switch to paste tab if on upload tab
+                    tabPaste.click();
+                } catch (e) {
+                    console.error('Failed to load sample:', e);
+                } finally {
+                    btnAnalyze.disabled = false;
+                }
+            }
+
+            document.getElementById('btn-sample-poor').addEventListener('click', () => {
+                loadSampleCode('poor', 'Poor Accessibility Benchmark');
+            });
+            document.getElementById('btn-sample-mixed').addEventListener('click', () => {
+                loadSampleCode('mixed', 'Mixed Accessibility Benchmark');
+            });
+            document.getElementById('btn-sample-good').addEventListener('click', () => {
+                loadSampleCode('good', 'Good Accessibility Benchmark');
+            });
+
+            // Clear Button
+            btnClear.addEventListener('click', () => {
+                editor.value = '';
+                charCounter.textContent = '0 characters';
+                uploadStatus.style.display = 'none';
+                pageNameInput.value = 'Untitled Analysis';
+            });
+
+            // Analyze HTML Button
+            btnAnalyze.addEventListener('click', () => {
+                const markup = editor.value;
+                const pageName = (pageNameInput.value || 'Untitled Analysis').trim();
+
+                if (!markup.trim()) {
+                    alert('Please enter or upload HTML markup to analyze.');
+                    editor.focus();
+                    return;
+                }
+
+                progressIndicator.style.display = 'flex';
+                btnAnalyze.disabled = true;
+
+                setTimeout(() => {
+                    try {
+                        const audit = A11yAuditor.runAudit(markup, pageName);
+                        // Redirect to Report Page
+                        window.location.href = 'report.html';
+                    } catch (err) {
+                        alert('Analysis failed: ' + err.message);
+                        progressIndicator.style.display = 'none';
+                        btnAnalyze.disabled = false;
+                    }
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

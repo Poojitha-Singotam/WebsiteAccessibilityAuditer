@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSolutions - Enterprise Cloud & Security Services</title>
+</head>
+<body>
+    <header role="banner">
+        <nav aria-label="Main Navigation">
+            <a href="#main-content" class="skip-link">Skip to main content</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/services">Our Cloud Services</a></li>
+                <li><a href="/contact">Contact Support</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main">
+        <h1>Enterprise Cloud Platform Solutions</h1>
+
+        <section aria-labelledby="intro-heading">
+            <h2 id="intro-heading">Infrastructure Modernization</h2>
+            <p>Accelerate your digital transformation with high availability multi-cloud architecture.</p>
+            
+            <!-- Accessible image with descriptive alternative text -->
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600" 
+                 alt="High-density data server room glowing with blue status indicator LED lights">
+            
+            <!-- Accessible decorative image -->
+            <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=100" 
+                 alt="" role="presentation">
+        </section>
+
+        <section aria-labelledby="pricing-heading">
+            <h2 id="pricing-heading">Financial Quarterly Performance</h2>
+            
+            <!-- Accessible table with scoped headers -->
+            <table>
+                <caption>Fiscal Year 2026 Revenue and Growth Breakdown</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Financial Quarter</th>
+                        <th scope="col">Enterprise Revenue</th>
+                        <th scope="col">Year-Over-Year Growth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Q1 2026</th>
+                        <td>$1,240,000</td>
+                        <td>+12.4%</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Q2 2026</th>
+                        <td>$1,580,000</td>
+                        <td>+18.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Request a Consultation</h2>
+            
+            <form action="/submit-inquiry" method="post">
+                <div class="form-group">
+                    <label for="full-name">Full Legal Name</label>
+                    <input type="text" id="full-name" name="name" autocomplete="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="work-email">Business Email Address</label>
+                    <input type="email" id="work-email" name="email" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-type">Project Requirement Type</label>
+                    <select id="project-type" name="project_type">
+                        <option value="cloud">Cloud Migration</option>
+                        <option value="security">Cybersecurity Audit</option>
+                        <option value="devops">DevOps Automation</option>
+                    </select>
+                </div>
+
+                <!-- Accessible button with clear text -->
+                <button type="submit">Submit Consultation Request</button>
+
+                <!-- Accessible icon-only button with aria-label -->
+                <button type="button" aria-label="Search documentation archives" class="icon-button">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </form>
+        </section>
+
+        <section aria-labelledby="media-heading">
+            <h2 id="media-heading">Company Overview Presentation</h2>
+            <video controls width="480">
+                <source src="overview.mp4" type="video/mp4">
+                <track kind="captions" src="captions-en.vtt" srclang="en" label="English Captions" default>
+                Your browser does not support HTML5 video.
+            </video>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2026 TechSolutions Inc. All rights reserved.</p>
+        <p><a href="/privacy-policy">Review TechSolutions Privacy Policy</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Mixed Accessibility Evaluation</title>
+</head>
+<body>
+    <header>
+        <nav aria-label="Customer Portal Navigation">
+            <a href="/overview">Account Overview</a>
+            <a href="/billing">Billing History</a>
+            <!-- Generic ambiguous link text -->
+            <a href="/support">click here</a>
+        </nav>
+    </header>
+
+    <!-- Missing semantic <main> tag, uses div container -->
+    <div class="content-wrapper">
+        <h1>Welcome Back, Alex Morgan</h1>
+
+        <section>
+            <h2>Current Subscription Plan</h2>
+            <p>You are on the Pro Enterprise Tier.</p>
+
+            <!-- Image with valid alt -->
+            <img src="badge-pro.png" alt="Pro enterprise tier certified customer badge">
+
+            <!-- Problematic image without alt -->
+            <img src="promo-banner.jpg">
+        </section>
+
+        <!-- Heading issue: Empty heading -->
+        <h4></h4>
+
+        <section>
+            <h2>Update Profile Details</h2>
+            <form>
+                <!-- Correctly labeled input -->
+                <div class="form-row">
+                    <label for="user-phone">Phone Number</label>
+                    <input type="tel" id="user-phone" name="phone" autocomplete="tel">
+                </div>
+
+                <!-- Unlabeled form input control -->
+                <div class="form-row">
+                    <input type="text" id="referral-code" placeholder="Enter Referral Code">
+                </div>
+
+                <!-- Unlabeled select element -->
+                <div class="form-row">
+                    <select id="timezone-select">
+                        <option value="est">Eastern Time (US)</option>
+                        <option value="pst">Pacific Time (US)</option>
+                        <option value="utc">UTC</option>
+                    </select>
+                </div>
+
+                <!-- Button with text -->
+                <button type="submit">Save Changes</button>
+
+                <!-- Icon-only button without accessible label -->
+                <button type="button" class="btn-refresh">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                </button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Service Usage Summary</h2>
+            <!-- Table with th, but without scope attribute -->
+            <table>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Compute Units</th>
+                    <th>Cost</th>
+                </tr>
+                <tr>
+                    <td>Database Cluster</td>
+                    <td>240 hrs</td>
+                    <td>$48.00</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 SaaS Dashboard Co. All rights reserved.</p>
+    </footer>
+</body>
+</html>

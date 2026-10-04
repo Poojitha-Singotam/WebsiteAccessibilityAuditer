@@ -1,0 +1,169 @@
+/* ==========================================================================
+   WEB ACCESSIBILITY AUDITOR - DASHBOARD STYLES
+   ========================================================================== */
+
+.dashboard-hero {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)), radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12), transparent);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.hero-content h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+}
+
+/* Statistics Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+}
+
+.stat-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.stat-card.stat-score .stat-value {
+    color: var(--primary);
+}
+
+.stat-card.stat-critical .stat-value {
+    color: var(--severity-critical);
+}
+
+.stat-card.stat-errors .stat-value {
+    color: var(--severity-error);
+}
+
+.stat-card.stat-total .stat-value {
+    color: #a78bfa;
+}
+
+/* Recent Audits Table */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+}
+
+.data-table th {
+    background-color: rgba(15, 23, 42, 0.6);
+    padding: 0.875rem 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.score-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    min-width: 44px;
+}
+
+.score-pill.excellent { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+.score-pill.good { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
+.score-pill.warning { background: rgba(234, 179, 8, 0.15); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.4); }
+.score-pill.poor { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+.issue-counts-compact {
+    display: inline-flex;
+    gap: 0.4rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .dashboard-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Register - Web Accessibility Auditor</title>
+    <meta name="description" content="Sign in or register to save accessibility audit histories and access past audit reports.">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            max-width: 440px;
+            margin: 4rem auto;
+            width: 100%;
+        }
+        .auth-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            background: none;
+            border: none;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s ease;
+        }
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .demo-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.8125rem;
+            color: #93c5fd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="auditor.html" class="nav-link">New Audit</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2>Auditor Account Access</h2>
+                    <p style="font-size: 0.875rem;">Sign in or create an account to persist audit history in MySQL</p>
+                </div>
+
+                <div id="auth-alert" class="alert alert-danger" style="display: none;" role="alert"></div>
+
+                <div class="auth-tabs" role="tablist">
+                    <button type="button" id="tab-login" class="auth-tab active" role="tab" aria-selected="true">Sign In</button>
+                    <button type="button" id="tab-register" class="auth-tab" role="tab" aria-selected="false">Create Account</button>
+                </div>
+
+                <!-- Sign In Form -->
+                <form id="form-login" novalidate>
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">Email Address</label>
+                        <input type="email" id="login-email" class="form-control" autocomplete="email" required placeholder="auditor@a11y.dev">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">Password</label>
+                        <input type="password" id="login-password" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" id="btn-login-submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" style="display: none;" novalidate>
+                    <div class="form-group">
+                        <label for="reg-name" class="form-label">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" autocomplete="name" required placeholder="Jane Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email" class="form-label">Email Address</label>
+                        <input type="email" id="reg-email" class="form-control" autocomplete="email" required placeholder="jane@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password" class="form-label">Password (min 6 chars)</label>
+                        <input type="password" id="reg-password" class="form-control" autocomplete="new-password" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" id="btn-register-submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                        Create Account
+                    </button>
+                </form>
+
+                <!-- Demo Quick Fill Box -->
+                <div class="demo-box">
+                    <div>
+                        <strong>Demo Credentials:</strong><br>
+                        <span>auditor@a11y.dev / Password123!</span>
+                    </div>
+                    <button type="button" id="btn-demo-fill" class="btn btn-outline btn-sm">Auto-Fill</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Secure session tokens stored in localStorage.</p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            const alertBox = document.getElementById('auth-alert');
+            const demoBtn = document.getElementById('btn-demo-fill');
+
+            const loginEmail = document.getElementById('login-email');
+            const loginPassword = document.getElementById('login-password');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect') || 'dashboard.html';
+
+            if (urlParams.get('logged_out')) {
+                showAlert('You have been signed out.', 'success');
+            } else if (urlParams.get('expired')) {
+                showAlert('Your session has expired. Please sign in again.', 'warning');
+            }
+
+            // Tab Switching
+            tabLogin.addEventListener('click', () => {
+                tabLogin.classList.add('active');
+                tabLogin.setAttribute('aria-selected', 'true');
+                tabRegister.classList.remove('active');
+                tabRegister.setAttribute('aria-selected', 'false');
+                formLogin.style.display = 'block';
+                formRegister.style.display = 'none';
+                clearAlert();
+            });
+
+            tabRegister.addEventListener('click', () => {
+                tabRegister.classList.add('active');
+                tabRegister.setAttribute('aria-selected', 'true');
+                tabLogin.classList.remove('active');
+                tabLogin.setAttribute('aria-selected', 'false');
+                formRegister.style.display = 'block';
+                formLogin.style.display = 'none';
+                clearAlert();
+            });
+
+            // Demo Auto Fill
+            demoBtn.addEventListener('click', () => {
+                tabLogin.click();
+                loginEmail.value = 'auditor@a11y.dev';
+                loginPassword.value = 'Password123!';
+            });
+
+            function showAlert(msg, type = 'danger') {
+                alertBox.className = `alert alert-${type}`;
+                alertBox.textContent = msg;
+                alertBox.style.display = 'block';
+            }
+
+            function clearAlert() {
+                alertBox.style.display = 'none';
+            }
+
+            // Handle Sign In
+            formLogin.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearAlert();
+
+                const email = loginEmail.value.trim();
+                const password = loginPassword.value;
+
+                if (!email || !password) {
+                    showAlert('Please enter both your email address and password.');
+                    return;
+                }
+
+                try {
+                    const submitBtn = document.getElementById('btn-login-submit');
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Signing in...';
+
+                    const resp = await A11yAPI.login(email, password);
+                    A11yAPI.setToken(resp.token, true);
+                    A11yAuth.setUser(resp.user, true);
+
+                    window.location.href = redirectUrl;
+                } catch (err) {
+                    showAlert(err.message || 'Login failed.');
+                    const submitBtn = document.getElementById('btn-login-submit');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Sign In';
+                }
+            });
+
+            // Handle Register
+            formRegister.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearAlert();
+
+                const name = document.getElementById('reg-name').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-password').value;
+
+                if (!name || !email || !password) {
+                    showAlert('All registration fields are required.');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showAlert('Password must contain at least 6 characters.');
+                    return;
+                }
+
+                try {
+                    const submitBtn = document.getElementById('btn-register-submit');
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Creating account...';
+
+                    const resp = await A11yAPI.register(name, email, password);
+                    A11yAPI.setToken(resp.token, true);
+                    A11yAuth.setUser(resp.user, true);
+
+                    showAlert('Account created! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 500);
+                } catch (err) {
+                    showAlert(err.message || 'Registration failed.');
+                    const submitBtn = document.getElementById('btn-register-submit');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Create Account';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

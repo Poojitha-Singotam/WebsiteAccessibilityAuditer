@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Missing <title> and missing <html lang> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+</head>
+<body>
+    <!-- Missing landmark like header, nav, or main -->
+    <div>
+        <!-- Heading hierarchy violation: Skip from H1 to H3 -->
+        <h1>TechSolutions Portal</h1>
+        
+        <h3>Latest Announcements</h3>
+        <p>Welcome to our enterprise system.</p>
+
+        <!-- Image missing alt attribute -->
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500">
+
+        <!-- Form controls without associated labels -->
+        <form>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="pwd" placeholder="Password">
+            
+            <!-- Empty button -->
+            <button type="submit"></button>
+            
+            <!-- Icon button without aria-label or accessible text -->
+            <button class="icon-btn">
+                <span>&#128269;</span>
+            </button>
+        </form>
+
+        <!-- Empty link and ambiguous link text -->
+        <a href="/dashboard"></a>
+        <p>To read our corporate guidelines, <a href="/terms">click here</a>.</p>
+        <p>For more details, <a href="/more">read more</a>.</p>
+
+        <!-- Table without proper <th> headers -->
+        <table>
+            <tr>
+                <td>Quarter</td>
+                <td>Revenue</td>
+                <td>Growth</td>
+            </tr>
+            <tr>
+                <td>Q1</td>
+                <td>$1.2M</td>
+                <td>+12%</td>
+            </tr>
+            <tr>
+                <td>Q2</td>
+                <td>$1.5M</td>
+                <td>+18%</td>
+            </tr>
+        </table>
+
+        <!-- Media without captions -->
+        <video src="overview.mp4" controls></video>
+
+        <!-- Inaccessible custom widget (fake button) -->
+        <div class="custom-button" onclick="alert('clicked')">Click Me</div>
+    </div>
+</body>
+</html>

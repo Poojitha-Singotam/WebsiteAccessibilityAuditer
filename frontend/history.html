@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit History - Web Accessibility Auditor</title>
+    <meta name="description" content="Persistent history of saved accessibility audits stored in MySQL database.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="app-header" role="banner">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-link" aria-label="Web Accessibility Auditor Home">
+                <span class="brand-badge">A11Y</span>
+                <span>Web Accessibility Auditor</span>
+            </a>
+            <nav aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="auditor.html" class="nav-link">New Audit</a></li>
+                    <li><a href="history.html" class="nav-link active">Audit History</a></li>
+                    <li id="nav-login-link"><a href="login.html" class="btn btn-outline btn-sm">Sign In</a></li>
+                    <li id="nav-user-profile" style="display: none;">
+                        <span class="user-profile-badge">
+                            <span class="user-avatar">&#128100;</span>
+                            <span id="user-name-display">User</span>
+                        </span>
+                    </li>
+                    <li id="nav-logout-btn" style="display: none;">
+                        <a href="#logout" class="btn btn-outline btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container" role="main" style="margin: 2rem auto 4rem auto;">
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <div>
+                <h1>Saved Audit History</h1>
+                <p>Persistent audit snapshots and issue logs saved to your MySQL database.</p>
+            </div>
+            <a href="auditor.html" class="btn btn-primary">Start New Audit</a>
+        </div>
+
+        <div id="history-loading" style="text-align: center; padding: 3rem;">
+            <div class="spinner" style="margin: 0 auto 1rem auto;"></div>
+            <p>Loading saved audits from database...</p>
+        </div>
+
+        <div id="history-empty" class="card empty-state" style="display: none;">
+            <div class="empty-state-icon">&#128193;</div>
+            <h2>No Saved Audits Found</h2>
+            <p>You have not saved any accessibility audits yet. Run an audit and click "Save Audit to MySQL" on the report screen.</p>
+            <a href="auditor.html" class="btn btn-primary" style="margin-top: 1rem;">Run an Audit</a>
+        </div>
+
+        <div id="history-table-wrapper" class="table-responsive" style="display: none;">
+            <table class="data-table" aria-label="Database Audit History">
+                <thead>
+                    <tr>
+                        <th scope="col">Page Name</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Issue Counts (Crit / Err / Warn)</th>
+                        <th scope="col">Audit Date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <!-- Populated by history.js -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="app-footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Web Accessibility Auditor. Developer accessibility toolkit.</p>
+            <p><a href="auditor.html">Run Audit</a> &bull; <a href="dashboard.html">Dashboard</a></p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/history.js"></script>
+</body>
+</html>
